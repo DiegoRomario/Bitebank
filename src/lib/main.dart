@@ -14,12 +14,15 @@ class BytebankApp extends StatelessWidget {
   }
 }
 
-class ListaTransferencias extends StatelessWidget {
+class ListaTransferencias extends StatefulWidget {
   final List<Transferencia> _transferencias = new List();
+  @override
+  _ListaTransferenciasState createState() => _ListaTransferenciasState();
+}
 
+class _ListaTransferenciasState extends State<ListaTransferencias> {
   @override
   Widget build(BuildContext context) {
-    _transferencias.add(new Transferencia(1000, "155211-8"));
     return Scaffold(
       appBar: AppBar(
         title: Text("Transferências"),
@@ -32,14 +35,17 @@ class ListaTransferencias extends StatelessWidget {
               return FormularioTrasnferencia();
             }));
             future.then((onValue) {
-              print("estou no then");
-              print(onValue);
+              if (onValue != null) {
+                print("estou no then");
+                print(onValue);
+                widget._transferencias.add(onValue);
+              }
             });
           }),
       body: ListView.builder(
-        itemCount: _transferencias.length,
+        itemCount: widget._transferencias.length,
         itemBuilder: (BuildContext context, int index) {
-          return ItemTransferencia(_transferencias[index]);
+          return ItemTransferencia(widget._transferencias[index]);
         },
       ),
     );
