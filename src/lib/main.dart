@@ -6,10 +6,17 @@ class BytebankApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: ListaTransferencias(),
+      theme: ThemeData(
+        primaryColor: Colors.indigo[800],
+        accentColor: Colors.red[300],
+        scaffoldBackgroundColor: Colors.blue[50],
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.indigo[800],
+          textTheme: ButtonTextTheme.accent,
+        ),
       ),
+      debugShowCheckedModeBanner: false,
+      home: ListaTransferencias(),
     );
   }
 }
@@ -32,14 +39,21 @@ class _ListaTransferenciasState extends State<ListaTransferencias> {
           onPressed: () {
             final Future<Transferencia> future =
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return FormularioTrasnferencia();
+              return FormularioTransferencia();
             }));
             future.then((onValue) {
-              if (onValue != null) {
-                print("estou no then");
-                print(onValue);
-                widget._transferencias.add(onValue);
-              }
+              Future.delayed(
+                Duration(seconds: 5),
+                () {
+                  if (onValue != null) {
+                    print("estou no then");
+                    print(onValue);
+                    setState(() {
+                      widget._transferencias.add(onValue);
+                    });
+                  }
+                },
+              );
             });
           }),
       body: ListView.builder(
@@ -70,7 +84,13 @@ class ItemTransferencia extends StatelessWidget {
   }
 }
 
-class FormularioTrasnferencia extends StatelessWidget {
+class FormularioTransferencia extends StatefulWidget {
+  @override
+  _FormularioTransferenciaState createState() =>
+      _FormularioTransferenciaState();
+}
+
+class _FormularioTransferenciaState extends State<FormularioTransferencia> {
   final TextEditingController _controllerConta = new TextEditingController();
   final TextEditingController _controllerValor = new TextEditingController();
 
@@ -80,26 +100,28 @@ class FormularioTrasnferencia extends StatelessWidget {
         appBar: AppBar(
           title: Text("Criando Transferencia"),
         ),
-        body: Column(
-          children: <Widget>[
-            InputField(
-                pcontroller: _controllerConta,
-                phint: "000000-0",
-                picon: Icons.credit_card,
-                plabel: "Numero da conta"),
-            InputField(
-                pcontroller: _controllerValor,
-                phint: "0,00",
-                picon: Icons.monetization_on,
-                plabel: "R\$ Valor"),
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              onPressed: () {
-                transferir(context);
-              },
-              child: Text("Transferir"),
-            )
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              InputField(
+                  pcontroller: _controllerConta,
+                  phint: "000000-0",
+                  picon: Icons.credit_card,
+                  plabel: "Numero da conta"),
+              InputField(
+                  pcontroller: _controllerValor,
+                  phint: "0,00",
+                  picon: Icons.monetization_on,
+                  plabel: "R\$ Valor"),
+              RaisedButton(
+                color: Theme.of(context).primaryColor,
+                onPressed: () {
+                  transferir(context);
+                },
+                child: Text("Transferir"),
+              )
+            ],
+          ),
         ));
   }
 
