@@ -52,7 +52,7 @@ class _ContactNewState extends State<ContactNew> {
                     final String name = _fullnameController.text;
                     final int accountNumber =
                         int.tryParse(_accountnumberController.text);
-                    final contact = new Contact(name, accountNumber);
+                    final contact = new Contact(0, name, accountNumber);
                     Navigator.pop(context, contact);
                   },
                   child: Text("Create"),
