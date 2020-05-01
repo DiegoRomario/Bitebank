@@ -1,15 +1,9 @@
-import 'package:bytebank/database/app-database.dart';
-import 'package:bytebank/models/contact.dart';
 import 'package:flutter/material.dart';
 
 import 'screens/dashboard.dart';
 
 void main() {
   runApp(MyApp());
-  save(Contact(0, 'Demo', 11974355839)).then((id) {
-    print("Id gerado: $id ");
-    findAll().then((onValue) => debugPrint(onValue.toString()));
-  });
 }
 
 class MyApp extends StatelessWidget {
