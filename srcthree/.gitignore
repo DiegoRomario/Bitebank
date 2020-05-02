@@ -29,14 +29,7 @@
 .pub-cache/
 .pub/
 /build/
-/srcone/build/
-./build/
-.build
-**/srcone/build/
-/srctwo/build/
-**/srctwo/build/
-/srcthree/build/
-**/srcthree/build/
+
 # Web related
 lib/generated_plugin_registrant.dart
 
