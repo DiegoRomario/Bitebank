@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'http/webclient.dart';
+import 'models/contact.dart';
+import 'models/transaction.dart';
 import 'screens/dashboard.dart';
 
 void main() {
   runApp(MyApp());
-  findAll().then((transactions) => print('new transactions $transactions'));
+  save(Transaction(666, Contact(0, 'Tico', 2000)))
+      .then((transaction) => print(transaction));
+  // findAll().then((transactions) => print('new transactions $transactions'));
 }
 
 class MyApp extends StatelessWidget {
