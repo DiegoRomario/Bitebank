@@ -1,6 +1,7 @@
 import 'package:bytebank/database/dao/contact-dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact-new.dart';
+import 'package:bytebank/widgets/loader.dart';
 import 'package:flutter/material.dart';
 
 class ContactList extends StatefulWidget {
@@ -25,19 +26,7 @@ class _ContactListState extends State<ContactList> {
               break;
             case ConnectionState.waiting:
               // return Center(
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Text("Loading..."),
-                    ),
-                  ],
-                ),
-              );
+              return Loader();
               break;
             case ConnectionState.active:
               break;
