@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'http/webclient.dart';
 import 'screens/dashboard.dart';
 
 void main() {
   runApp(MyApp());
+  findAll();
 }
 
 class MyApp extends StatelessWidget {
