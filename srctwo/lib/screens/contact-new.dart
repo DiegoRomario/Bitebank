@@ -1,4 +1,4 @@
-import 'package:bytebank/database/app-database.dart';
+import 'package:bytebank/database/dao/contact-dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +8,7 @@ class ContactNew extends StatefulWidget {
 }
 
 class _ContactNewState extends State<ContactNew> {
+  ContactDao _dao = new ContactDao();
   final TextEditingController _fullnameController = new TextEditingController();
   final TextEditingController _accountnumberController =
       new TextEditingController();
@@ -55,7 +56,7 @@ class _ContactNewState extends State<ContactNew> {
                     final int accountNumber =
                         int.tryParse(_accountnumberController.text);
                     final Contact newContact = Contact(0, name, accountNumber);
-                    save(newContact).then((id) => Navigator.pop(context));
+                    _dao.save(newContact).then((id) => Navigator.pop(context));
                   },
                   child: Text("Create"),
                 ),
