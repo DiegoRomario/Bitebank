@@ -1,5 +1,6 @@
 import 'package:bytebank/http/webclient.dart';
 import 'package:bytebank/models/transaction.dart';
+import 'package:bytebank/widgets/centered-message.dart';
 import 'package:bytebank/widgets/loader.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,12 @@ class _TransactionListState extends State<TransactionList> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             final List<Transaction> transactions = snapshot.data;
+            if (transactions.length <= 0) {
+              return CenteredMessage(
+                "Not found",
+                icon: Icons.warning,
+              );
+            }
             return ListView.builder(
               itemBuilder: (context, index) {
                 final Transaction transaction = transactions[index];
@@ -47,7 +54,10 @@ class _TransactionListState extends State<TransactionList> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Loader();
           } else {
-            return Text("Unknown error");
+            return CenteredMessage(
+              "Unknown error",
+              icon: Icons.error,
+            );
           }
         },
       ),
