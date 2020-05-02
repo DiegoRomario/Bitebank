@@ -3,7 +3,12 @@ import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contact-new.dart';
 import 'package:flutter/material.dart';
 
-class ContactList extends StatelessWidget {
+class ContactList extends StatefulWidget {
+  @override
+  _ContactListState createState() => _ContactListState();
+}
+
+class _ContactListState extends State<ContactList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +17,7 @@ class ContactList extends StatelessWidget {
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
-        future: Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
+        future: findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -51,17 +56,11 @@ class ContactList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => ContactNew(),
             ),
-          )
-              .then((onValue) {
-            print(
-              onValue.toString(),
-            );
-          });
+          );
         },
         child: Icon(Icons.add),
       ),

@@ -1,3 +1,4 @@
+import 'package:bytebank/database/app-database.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,7 @@ class _ContactNewState extends State<ContactNew> {
         title: Text("New Contact"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
         child: Column(
           children: <Widget>[
             TextField(
@@ -31,7 +32,7 @@ class _ContactNewState extends State<ContactNew> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(bottom: 8.0),
               child: TextField(
                 controller: _accountnumberController,
                 decoration: InputDecoration(
@@ -47,13 +48,14 @@ class _ContactNewState extends State<ContactNew> {
               padding: const EdgeInsets.only(top: 8.0),
               child: SizedBox(
                 width: double.infinity,
+                height: 45,
                 child: RaisedButton(
                   onPressed: () {
                     final String name = _fullnameController.text;
                     final int accountNumber =
                         int.tryParse(_accountnumberController.text);
-                    final contact = new Contact(0, name, accountNumber);
-                    Navigator.pop(context, contact);
+                    final Contact newContact = Contact(0, name, accountNumber);
+                    save(newContact).then((id) => Navigator.pop(context));
                   },
                   child: Text("Create"),
                 ),
