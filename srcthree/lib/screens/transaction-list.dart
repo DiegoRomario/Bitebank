@@ -1,10 +1,11 @@
-import 'package:bytebank/http/webclient.dart';
+import 'package:bytebank/http/web-clients/transaction-web-client.dart';
 import 'package:bytebank/models/transaction.dart';
 import 'package:bytebank/widgets/centered-message.dart';
 import 'package:bytebank/widgets/loader.dart';
 import 'package:flutter/material.dart';
 
 class TransactionList extends StatelessWidget {
+  final TransactionWebClient _webClient = TransactionWebClient();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +13,7 @@ class TransactionList extends StatelessWidget {
         title: Text('Transactions'),
       ),
       body: FutureBuilder<List<Transaction>>(
-        future: findAll(),
+        future: _webClient.findAll(),
         builder: (context, snapshot) {
           if (ConnectionState.waiting == snapshot.connectionState) {
             return Loader();
