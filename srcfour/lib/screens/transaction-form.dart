@@ -1,6 +1,7 @@
 import 'package:bytebank/http/web-clients/transaction-web-client.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transaction.dart';
+import 'package:bytebank/widgets/response-dialog.dart';
 import 'package:bytebank/widgets/transaction-auth-dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -66,19 +67,15 @@ class _TransactionFormState extends State<TransactionForm> {
                           Transaction(value, widget.contact);
 
                       showDialog(
-                          context: context,
-                          builder: (context) {
-                            return TransactionAuthDialog(
-                                onConfirm: (String password) {
-                              _webClient
-                                  .save(transactionCreated, password)
-                                  .then((response) {
-                                if (response != null) {
-                                  Navigator.pop(context);
-                                }
-                              });
-                            });
-                          });
+                        context: context,
+                        builder: (contextDialog) {
+                          return TransactionAuthDialog(
+                            onConfirm: (String password) {
+                              _save(transactionCreated, password, context);
+                            },
+                          );
+                        },
+                      );
                     },
                   ),
                 ),
@@ -88,5 +85,28 @@ class _TransactionFormState extends State<TransactionForm> {
         ),
       ),
     );
+  }
+
+  void _save(Transaction transactionCreated, String password,
+      BuildContext context) async {
+    final Transaction transaction =
+        await _webClient.save(transactionCreated, password).catchError((e) {
+      showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return FailureDialog(e.message);
+        },
+      );
+    }, test: (e) => e is Exception);
+
+    if (transaction != null) {
+      await showDialog(
+        context: context,
+        builder: (dialogContext) {
+          return SuccessDialog("Successful transaction");
+        },
+      );
+      Navigator.pop(context);
+    }
   }
 }
