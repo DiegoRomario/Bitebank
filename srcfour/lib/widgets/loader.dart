@@ -13,7 +13,7 @@ class Loader extends StatelessWidget {
         children: <Widget>[
           CircularProgressIndicator(),
           Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(16.0),
             child: Text(message),
           ),
         ],

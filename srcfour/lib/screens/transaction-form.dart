@@ -8,6 +8,8 @@ import 'package:bytebank/widgets/transaction-auth-dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+import '../widgets/loader.dart';
+
 class TransactionForm extends StatefulWidget {
   final Contact contact;
 
@@ -20,11 +22,10 @@ class TransactionForm extends StatefulWidget {
 class _TransactionFormState extends State<TransactionForm> {
   final TextEditingController _valueController = TextEditingController();
   final TransactionWebClient _webClient = TransactionWebClient();
-
+  bool _sending = false;
   @override
   Widget build(BuildContext context) {
     final String uuidId = Uuid().v4();
-    print("IDDDDDDDDDD: $uuidId");
     return Scaffold(
       appBar: AppBar(
         title: Text('New transaction'),
@@ -66,24 +67,34 @@ class _TransactionFormState extends State<TransactionForm> {
                   width: double.maxFinite,
                   child: RaisedButton(
                     child: Text('Transfer'),
-                    onPressed: () {
-                      final double value =
-                          double.tryParse(_valueController.text);
-                      final transactionCreated =
-                          Transaction(uuidId, value, widget.contact);
-                      showDialog(
-                          context: context,
-                          builder: (contextDialog) {
-                            return TransactionAuthDialog(
-                              onConfirm: (String password) {
-                                _save(transactionCreated, password, context);
-                              },
-                            );
-                          });
-                    },
+                    onPressed: _sending
+                        ? null
+                        : () {
+                            final double value =
+                                double.tryParse(_valueController.text);
+                            final transactionCreated =
+                                Transaction(uuidId, value, widget.contact);
+                            showDialog(
+                                context: context,
+                                builder: (contextDialog) {
+                                  return TransactionAuthDialog(
+                                    onConfirm: (String password) {
+                                      _save(transactionCreated, password,
+                                          context);
+                                    },
+                                  );
+                                });
+                          },
                   ),
                 ),
-              )
+              ),
+              Visibility(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Loader(message: "Sending"),
+                ),
+                visible: _sending,
+              ),
             ],
           ),
         ),
@@ -118,6 +129,9 @@ class _TransactionFormState extends State<TransactionForm> {
 
   Future<Transaction> _send(Transaction transactionCreated, String password,
       BuildContext context) async {
+    setState(() {
+      _sending = true;
+    });
     final Transaction transaction =
         await _webClient.save(transactionCreated, password).catchError((e) {
       _showFailureMessage(context, message: e.message);
@@ -126,6 +140,10 @@ class _TransactionFormState extends State<TransactionForm> {
           message: 'timeout submitting the transaction');
     }, test: (e) => e is TimeoutException).catchError((e) {
       _showFailureMessage(context);
+    }).whenComplete(() {
+      setState(() {
+        _sending = false;
+      });
     });
     return transaction;
   }
